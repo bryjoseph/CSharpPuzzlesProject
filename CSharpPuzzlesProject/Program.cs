@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace CSharpPuzzlesProject
 {
@@ -9,6 +10,9 @@ namespace CSharpPuzzlesProject
 
         // needed for Sieve Puzzle
         static bool[] allNumbers;
+        // Needed for Log Pairs Puzzle
+        static int[] boxes1 = { 1, 2, 3, 4, 5 };
+        static int[] boxes2 = { 6, 7, 8, 2, 0 };
 
         static void Main(string[] args)
         {
@@ -78,11 +82,19 @@ namespace CSharpPuzzlesProject
 
 
             // Sieve of Eratosthenes Puzzle (given a number by the user, determine how many numbers are prime)
-            Console.WriteLine("Please enter the number of values to check: ");
-            var n = Convert.ToInt32(Console.ReadLine());
-            var arraySize = n + 1; // arrays are index based and start at 0 instead of 1
-            MakeArrayFromUserInput(arraySize);
-            SieveFunction(arraySize);
+            //Console.WriteLine("Please enter the number of values to check: ");
+            //var n = Convert.ToInt32(Console.ReadLine());
+            //var arraySize = n + 1; // arrays are index based and start at 0 instead of 1
+            //MakeArrayFromUserInput(arraySize);
+            //SieveFunction(arraySize);
+
+            // Log Pairs Puzzle
+            // LogPairs(boxes);
+
+            //CompareArrays Function
+            Console.WriteLine(CompareArrays(boxes1, boxes2));
+
+            Console.WriteLine(CompareArrays2(boxes1, boxes2));
 
 
         }
@@ -216,6 +228,51 @@ namespace CSharpPuzzlesProject
                     variableCounter = 0;
                 }
             }
+        }
+
+        private static void LogPairs(string[] boxes)
+        {
+            for (int i = 0; i < boxes.Length; i++)
+            {
+                for (int j = 0; j < boxes.Length; j++)
+                {
+                    Console.WriteLine(boxes[i], boxes[j]);
+                }
+            }
+        }
+
+        private static bool CompareArrays(int[] array1, int[] array2)
+        {
+            for (int i = 0; i < array1.Length; i++)
+            {
+                for (int j = 0; j < array2.Length; j++)
+                {
+                    if (array1[i] == array2[j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool CompareArrays2(int[] array1, int[] array2)
+        {
+            var map = new Hashtable();
+            for (int i = 0; i < array1.Length; i++)
+            {
+                if (!map.ContainsKey(array1[i]))
+                {
+                    var item = array1[i];
+                    map[item] = true;
+                }
+            }
+
+            for (int j = 0; j < array2.Length; j++)
+            {
+                if (map.ContainsKey(array2[j])) return true;
+            }
+            return false;
         }
     }
 }
