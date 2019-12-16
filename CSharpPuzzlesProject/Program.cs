@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 
 namespace CSharpPuzzlesProject
 {
@@ -13,6 +14,14 @@ namespace CSharpPuzzlesProject
         // Needed for Log Pairs Puzzle
         static int[] boxes1 = { 1, 2, 3, 4, 5 };
         static int[] boxes2 = { 6, 7, 8, 2, 0 };
+
+        static string[] strings = new string[] { "a", "b", "c", "d" };
+        // the memory needed is 4 strings at 4 bytes each = 16 bytes
+        static int[] array1 = { 0, 3, 4, 31 };
+        static int[] array2 = { 4, 6, 30 };
+
+        static string stringValue = "dog";
+        static string stringValue2 = "cad";
 
         static void Main(string[] args)
         {
@@ -92,9 +101,61 @@ namespace CSharpPuzzlesProject
             // LogPairs(boxes);
 
             //CompareArrays Function
-            Console.WriteLine(CompareArrays(boxes1, boxes2));
+            // Console.WriteLine(CompareArrays(boxes1, boxes2));
 
-            Console.WriteLine(CompareArrays2(boxes1, boxes2));
+            // Console.WriteLine(CompareArrays2(boxes1, boxes2));
+
+            strings.ToList().ForEach(i => Console.Write(i.ToString()));
+            Console.WriteLine("");
+            Console.WriteLine(strings.Length);
+            AddAtFirst(ref strings, "e");
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            strings.ToList().ForEach(i => Console.Write(i.ToString()));
+            Console.WriteLine("");
+            Console.WriteLine(strings.Length);
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            AddAtLast(ref strings, "f");
+            strings.ToList().ForEach(i => Console.Write(i.ToString()));
+            Console.WriteLine("");
+            Console.WriteLine(strings.Length);
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            AddAtMiddle(ref strings, "g");
+            strings.ToList().ForEach(i => Console.Write(i.ToString()));
+            Console.WriteLine("");
+            Console.WriteLine(strings.Length);
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+            RemoveAtEnd(ref strings);
+            strings.ToList().ForEach(i => Console.Write(i.ToString()));
+            Console.WriteLine("");
+            Console.WriteLine(strings.Length);
+
+            // reverse a string
+            // first ask the user for the string
+            //Console.WriteLine("Enter a string for the next method: ");
+            //var stringToReverse = Console.ReadLine();
+            // Console.WriteLine(ReverseAString(stringToReverse));
+            //Console.WriteLine(ReverseAString2(stringToReverse));
+
+            // merge arrays and sort the merged array
+            //var mergedArray = MergeSortedArrays(array1, array2);
+            //mergedArray.ToList().ForEach(i => Console.Write(i.ToString()));
+
+            // string contains duplicate
+            //Console.WriteLine("Does this string contain any duplicates? ");
+            //var userInput = Console.ReadLine();
+            //Console.WriteLine(IsUniqueChars(userInput));
+
+            // check if the strings are permutations of each other
+            Console.WriteLine("Are these two strings permutations of each other?");
+            Console.WriteLine(AreStringsPermutations(stringValue, stringValue2));
 
 
         }
@@ -273,6 +334,172 @@ namespace CSharpPuzzlesProject
                 if (map.ContainsKey(array2[j])) return true;
             }
             return false;
+        }
+
+        // types of operations we can perform on an array
+        // add = depends on position
+
+        // add at FIRST
+        static string[] AddAtFirst(ref string[] stringArray, string newString)
+        {
+            // first add space for new string in array
+            Array.Resize(ref stringArray, stringArray.Length + 1);
+
+            for (int i = stringArray.Length - 1; i > 0; i--)
+            {
+                stringArray[i] = stringArray[i - 1];
+            }
+
+            stringArray[stringArray.GetLowerBound(0)] = newString;
+
+            return stringArray;
+        }
+
+        // add at LAST
+        static string[] AddAtLast(ref string[] stringArray, string newString)
+        {
+            // first add space for new string in array
+            Array.Resize(ref stringArray, stringArray.Length + 1);
+
+            stringArray[stringArray.Length - 1] = newString;
+
+            return stringArray;
+        }
+
+        // add at MIDDLE
+        static string[] AddAtMiddle(ref string[] stringArray, string newString)
+        {
+            // first add space for new string in array
+            Array.Resize(ref stringArray, stringArray.Length + 1);
+
+            // new middle index value
+            int newMiddleIndex = stringArray.Length / 2;
+
+            for (int i = stringArray.Length - 1; i > newMiddleIndex; i--)
+            {
+                stringArray[i] = stringArray[i - 1];
+            }
+
+            stringArray[newMiddleIndex] = newString;
+
+            return stringArray;
+        }
+
+        // remove at END
+        static string[] RemoveAtEnd(ref string[] stringArray)
+        {
+            // first add space for new string in array
+            Array.Resize(ref stringArray, stringArray.Length - 1);
+
+            return stringArray;
+        }
+
+        static string ReverseAString(string userInput)
+        {
+
+            // creating my var for the reversing the user string
+            string reversedString = "";
+
+            for (int i = userInput.Length - 1; i >= 0; i--)
+            {
+                reversedString += userInput[i];
+            }
+            return reversedString;
+        }
+
+        static string ReverseAString2(string userInput)
+        {
+            // creating my var to handle the reversing of user string
+            char[] reversedString = new char[userInput.Length];
+            int reversedIndex = 0;
+
+            for (int i = userInput.Length - 1; i >= 0; i--)
+            {
+                reversedString[reversedIndex++] = userInput[i];
+            }
+            return new string(reversedString);
+        }
+
+        static int[] MergeSortedArrays(int[] array1, int[] array2)
+        {
+            // creating a new array  as long as the two arrays passed in
+            int[] mergedArray = new int[array1.Length + array2.Length];
+            // must combine the two arrays into the one array
+
+            // first step is get the first array values into the new merged array
+            for (int i = 0; i < array1.Length; i++)
+            {
+                mergedArray[i] = array1[i];
+            }
+
+            // nest step: get the second array values into the merged array BUT have to start after the first array values
+            for (int i = 0; i < array2.Length; i++)
+            {
+                mergedArray[array1.Length + i] = array2[i];
+            }
+
+            // create a sorting flag value
+            bool sorted = false;
+
+            // now perform the sort on the merged array values
+            while (!sorted)
+            {
+                sorted = true;
+                for (int i = 1; i < mergedArray.Length; i++)
+                {
+                    if (mergedArray[i - 1] > mergedArray[i])
+                    {
+                        sorted = false;
+                        var temp = mergedArray[i - 1];
+                        mergedArray[i - 1] = mergedArray[i];
+                        mergedArray[i] = temp;
+                    }
+                }
+            }
+            return mergedArray;
+        }
+
+        static bool IsUniqueChars(string userInput)
+        {
+            // first is a check on the userInput value (checking against the ASCII character library)
+            if (userInput.Length > 128) return false;
+
+            // make a bool array of values against the ASCII library
+            bool[] checkedValues = new bool[128];
+
+            // loop over the userInput and set true into the bool array if the value is found
+            for (int i = 0; i < userInput.Length; i++)
+            {
+                // a var to hold the index of the character found in the userInput
+                int value = userInput[i];
+
+                if (checkedValues[value])
+                {
+                    return false; // if found
+                }
+                checkedValues[value] = true;
+            }
+            return true;
+        }
+
+        static bool AreStringsPermutations(string str1, string str2)
+        {
+            // first a check on the length, because if the strings are diff lengths then they cant be permutations
+            if (str1.Length != str2.Length) return false;
+
+            // sort the characters of the two strings in question with built-in function
+            char[] sortedStr1 = str1.ToCharArray();
+            char[] sortedStr2 = str2.ToCharArray();
+
+            Array.Sort(sortedStr1);
+            Array.Sort(sortedStr2);
+
+            for (int i = 0; i < str1.Length; i++)
+            {
+                if (sortedStr1[i] != sortedStr2[i]) return false;
+            }
+
+            return true;
         }
     }
 }
